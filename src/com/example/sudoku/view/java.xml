@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/11.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.sudoku.controller.SudokuController"
+            style="-fx-background-color: rgba(0,0,0,0.35);">
+    <center>
+        <VBox spacing="8" alignment="CENTER" BorderPane.alignment="CENTER">
+            <GridPane fx:id="gridPane" hgap="2" vgap="2" padding="10"/>
+            <Label fx:id="statusLabel" text="Ready." style="-fx-text-fill: white; -fx-font-size: 14px;"/>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox spacing="10" padding="10" alignment="CENTER">
+            <Button fx:id="btnHelp" text="💡 Help"/>
+            <Button fx:id="btnReset" text="🔁 Reset"/>
+            <Label text="Use 1–6 to type, arrows to move" style="-fx-text-fill: white;"/>
+        </HBox>
+    </bottom>
+</BorderPane>
