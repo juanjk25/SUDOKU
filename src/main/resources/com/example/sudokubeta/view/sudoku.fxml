@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.sudokubeta.controller.SudokuController"
+            prefWidth="500"
+            prefHeight="600"
+            style="-fx-background-color: rgba(0,0,0,0.35);">
+
+    <center>
+        <VBox spacing="20" alignment="CENTER" BorderPane.alignment="CENTER">
+            <Label text="Sudoku 6x6"
+                   style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+            <GridPane fx:id="gridPane"
+                      hgap="2"
+                      vgap="2"
+                      style="-fx-background-color: rgba(0,0,0,0.2); -fx-padding: 10; -fx-border-color: white; -fx-border-width: 2; -fx-border-radius: 10;"/>
+
+            <Label fx:id="statusLabel"
+                   text="Ready to play! Use 1-6 to enter numbers."
+                   style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox spacing="15"
+              alignment="CENTER"
+              style="-fx-background-color: rgba(0,0,0,0.5); -fx-padding: 15;">
+            <Button fx:id="btnHelp"
+                    text="💡 Help"
+                    style="-fx-font-size: 14px; -fx-pref-width: 80;"/>
+            <Button fx:id="btnReset"
+                    text="🔁 Reset"
+                    style="-fx-font-size: 14px; -fx-pref-width: 80;"/>
+            <Label text="Controls: 1-6 to type, Arrows to move, Del to clear"
+                   style="-fx-text-fill: white; -fx-font-size: 12px;"/>
+        </HBox>
+    </bottom>
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+</BorderPane>

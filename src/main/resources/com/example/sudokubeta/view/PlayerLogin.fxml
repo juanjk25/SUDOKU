@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.2"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.sudokubeta.controller.LoginController"
+      spacing="20"
+      alignment="CENTER"
+      prefWidth="400"
+      prefHeight="500"
+      style="-fx-background-color: rgba(0,0,0,0.7); -fx-padding: 40;">
+
+    <Label text="🎮 SUDOKU 6x6"
+           style="-fx-text-fill: white; -fx-font-size: 32px; -fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 5, 0.5, 2, 2);"/>
+
+    <Label text="Enter Your Player Name"
+           style="-fx-text-fill: white; -fx-font-size: 18px; -fx-padding: 0 0 10 0;"/>
+
+    <TextField fx:id="playerNameField"
+               promptText="Type your name here..."
+               style="-fx-font-size: 16px; -fx-pref-width: 250; -fx-pref-height: 40;"
+               onAction="#onLoginButtonClick">
+        <VBox.margin>
+            <Insets bottom="10"/>
+        </VBox.margin>
+    </TextField>
+
+    <Button fx:id="loginButton"
+            text="Start Game 🚀"
+            onAction="#onLoginButtonClick"
+            style="-fx-font-size: 16px; -fx-pref-width: 200; -fx-pref-height: 45; -fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;"/>
+
+    <Label fx:id="errorLabel"
+           text=""
+           style="-fx-text-fill: #ff6b6b; -fx-font-size: 14px; -fx-wrap-text: true; -fx-max-width: 300;"/>
+
+    <VBox spacing="10" style="-fx-padding: 20 0 0 0;">
+        <Label text="🎯 Game Instructions:"
+               style="-fx-text-fill: #a0e7a0; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+        <Label text="• Use numbers 1-6 to fill cells"
+               style="-fx-text-fill: white; -fx-font-size: 12px;"/>
+        <Label text="• Use arrow keys to navigate"
+               style="-fx-text-fill: white; -fx-font-size: 12px;"/>
+        <Label text="• Press Delete to clear cells"
+               style="-fx-text-fill: white; -fx-font-size: 12px;"/>
+        <Label text="• Click Help for suggestions"
+               style="-fx-text-fill: white; -fx-font-size: 12px;"/>
+    </VBox>
+
+</VBox>
