@@ -44,13 +44,13 @@ public class Main extends Application {
         Scene scene = new Scene(root, 400, 500);
         scene.getStylesheets().add(getClass().getResource("/com/example/sudokubeta/view/style.css").toExternalForm());
 
-        // ← ADD ICON TO WINDOW
+        // ADD ICON TO WINDOW
         try {
             Image icon = new Image(getClass().getResourceAsStream("/com/example/sudokubeta/view/sudoku.png"));
             primaryStage.getIcons().add(icon);
-            System.out.println("✅ Logo cargado exitosamente");
+            System.out.println("Logo cargado exitosamente");
         } catch (Exception e) {
-            System.err.println("❌ No se pudo cargar el logo: " + e.getMessage());
+            System.err.println("No se pudo cargar el logo: " + e.getMessage());
             // Continue without failing the application if icon load fails
         }
 

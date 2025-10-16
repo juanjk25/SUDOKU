@@ -171,9 +171,9 @@ public class SudokuController implements ISudokuController {
 
         int r = cell.getRow(), c = cell.getCol();
 
-        // ← LOCK KEYS ON FIXED CELLS
+        // LOCK KEYS ON FIXED CELLS
         if (model.isFixed(r, c)) {
-            e.consume();  // ← Ignore the keyboard event
+            e.consume();  // Ignore the keyboard event
             return;
         }
 
@@ -215,8 +215,8 @@ public class SudokuController implements ISudokuController {
 
                 if (model.isFixed(r, c)) {
                     cell.getStyleClass().add("fixed-cell");
-                    cell.setEditable(false);  // ← NOT editable
-                    cell.setFocusTraversable(false); // ← Cannot receive focus
+                    cell.setEditable(false);  // NOT editable
+                    cell.setFocusTraversable(false); // Cannot receive focus
                 } else {
                     cell.setEditable(true);
                     cell.setFocusTraversable(true);
@@ -262,13 +262,13 @@ public class SudokuController implements ISudokuController {
     public void onHelp() {
         int[] empty = model.firstEmptyCell();
         if (empty == null) {
-            updateStatusLabelWithMessage("🎉 Puzzle complete!");
+            updateStatusLabelWithMessage("Puzzle complete!");
             return;
         }
         int r = empty[0], c = empty[1];
         List<Integer> cand = model.candidates(r, c);
         if (cand.isEmpty()) {
-            updateStatusLabelWithMessage("❌ No valid candidates here.");
+            updateStatusLabelWithMessage("No valid candidates here.");
             cells[r][c].getStyleClass().add("conflict-cell");
             return;
         }
@@ -277,7 +277,7 @@ public class SudokuController implements ISudokuController {
         SudokuCell cell = cells[r][c];
         cell.setText(String.valueOf(suggestion));
         cell.getStyleClass().add("help-cell");
-        updateStatusLabelWithMessage("💡 Help: placed " + suggestion + " at (" + (r+1) + "," + (c+1) + ").");
+        updateStatusLabelWithMessage("Help: placed " + suggestion + " at (" + (r+1) + "," + (c+1) + ").");
         performValidation();
     }
 
@@ -286,7 +286,7 @@ public class SudokuController implements ISudokuController {
      */
     private void updateStatusLabel() {
         List<int[]> conflicts = model.findAllConflicts();
-        String statusMessage = conflicts.isEmpty() ? "✅ All good!" : "⚠️ Conflicts found!";
+        String statusMessage = conflicts.isEmpty() ? "All good!" : "⚠Conflicts found!";
         statusLabel.setText(getPlayerGreeting() + statusMessage);
     }
 
@@ -344,7 +344,7 @@ public class SudokuController implements ISudokuController {
         }
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("🎉 ¡Felicidades!");
+        alert.setTitle("¡Felicidades!");
         alert.setHeaderText("¡JUEGO COMPLETADO!");
         alert.setContentText(getCongratulationsMessage());
 
@@ -383,7 +383,7 @@ public class SudokuController implements ISudokuController {
     private void resetGame() {
         model.loadPuzzle(starter);
         updateAllCellsFromModel();
-        statusLabel.setText("🔁 ¡Nuevo juego! Good luck " + (playerName != null ? playerName : "") + "!");
+        statusLabel.setText("¡Nuevo juego! Good luck " + (playerName != null ? playerName : "") + "!");
     }
 
 }

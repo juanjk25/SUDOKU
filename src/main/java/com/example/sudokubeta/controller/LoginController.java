@@ -13,6 +13,14 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Controller for the player login screen.
+ *
+ * <p>Handles player name entry, basic validations, and the
+ * transition to the main game screen by loading the corresponding FXML.
+ *
+ * @since 2025
+ */
 public class LoginController {
 
     /**
@@ -75,17 +83,17 @@ public class LoginController {
         String name = playerNameField.getText().trim();
 
         if (name.isEmpty()) {
-            errorLabel.setText("❌ Please enter your name to continue!");
+            errorLabel.setText("Please enter your name to continue!");
             return;
         }
 
         if (name.length() < 2) {
-            errorLabel.setText("❌ Name must be at least 2 characters long!");
+            errorLabel.setText("Name must be at least 2 characters long!");
             return;
         }
 
         if (name.length() > 15) {
-            errorLabel.setText("❌ Name must be less than 15 characters!");
+            errorLabel.setText("Name must be less than 15 characters!");
             return;
         }
 
@@ -125,7 +133,7 @@ public class LoginController {
             Scene gameScene = new Scene(gameRoot);
             gameScene.getStylesheets().add(getClass().getResource("/com/example/sudokubeta/view/style.css").toExternalForm());
 
-            // ← ADD THE ICON TO THE GAME WINDOW
+            // ADD THE ICON TO THE GAME WINDOW
             try {
                 Image icon = new Image(getClass().getResourceAsStream("/com/example/sudokubeta/images/sudoku-logo.png"));
                 currentStage.getIcons().add(icon);
