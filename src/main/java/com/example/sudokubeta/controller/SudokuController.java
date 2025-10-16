@@ -26,15 +26,45 @@ import java.util.List;
 
 public class SudokuController implements ISudokuController {
 
+    /**
+     * Container for the board's grid of cells, injected by FXML.
+     */
     @FXML private GridPane gridPane;
+
+    /**
+     * Button to request help (suggestion) from the user, injected by FXML.
+     */
     @FXML private Button btnHelp;
+
+    /**
+     * Button to reset the dashboard to its initial state, injected by FXML.
+     */
     @FXML private Button btnReset;
+
+    /**
+     * Label to display the current game state and messages to the user, injected by FXML.
+     */
     @FXML private Label statusLabel;
 
+    /**
+     * Sudoku model containing the logic and state of the board.
+     */
     private final ISudokuModel model = new SudokuModel();
+
+    /**
+     * Array of visual components representing the board cells.
+     * The size is defined by {@link ISudokuModel#SIZE}.
+     */
     private final SudokuCell[][] cells = new SudokuCell[ISudokuModel.SIZE][ISudokuModel.SIZE];
+
+    /**
+     * Current player name. Can be {@code null} if not set.
+     */
     private String playerName;
 
+    /**
+     * Initial configuration (puzzle starter) used to load or reset the board.
+     */
     private final int[][] starter = {
             {1, 4, 0, 0, 2, 0},
             {0, 0, 3, 0, 0, 5},
@@ -46,11 +76,16 @@ public class SudokuController implements ISudokuController {
 
 
     /**
-     * Initialization method called automatically by JavaFX after loading the FXML.
-     *  Configures the user interface, loads the initial dashboard, and sets event handlers.
+     * Initialization automatically invoked by JavaFX after loading the FXML.
      *
+     * <p>Performs the following actions:
+     * <ul>
+     *  <li>Loads the initial puzzle into the model.</li>
+     *  <li>Builds the grid of cells in the interface.</li>
+     *  <li>Attaches keyboard handlers and button events.</li>
+     *  <li>Updates the cells and the state label.</li>
+     * </ul>
      */
-
     @Override
     @FXML
     public void initialize() {
@@ -114,18 +149,21 @@ public class SudokuController implements ISudokuController {
 
 
     /**
-     * Method to configure keyboard event handlers for navigation and data entry.
-     * Allows you to use arrow keys to navigate and number keys to enter values.
+     * Adds the necessary keyboard event handlers for navigation and input.
      *
+     * <p>Registers a filter for {@link KeyEvent#KEY_PRESSED} on the {@link #gridPane}.
      */
     private void attachKeyboardHandlers() {
         gridPane.addEventFilter(KeyEvent.KEY_PRESSED, this::onKeyPressed);
     }
 
     /**
-     * Handles keyboard events for the Sudoku grid.
+     * Handles keyboard events within the grid.
      *
-     *  @param e The user-generated keyboard event
+     * <p>Supports digit input (1-6), deletion, and arrow navigation.
+     * Ignores events when the current cell is marked as fixed in the model.
+     *
+     * @param e user-generated keyboard event
      */
     private void onKeyPressed(KeyEvent e) {
         Object focus = gridPane.getScene().getFocusOwner();
@@ -133,9 +171,9 @@ public class SudokuController implements ISudokuController {
 
         int r = cell.getRow(), c = cell.getCol();
 
-        // ← BLOQUEAR TECLAS EN CELDAS FIJAS
+        // ← LOCK KEYS ON FIXED CELLS
         if (model.isFixed(r, c)) {
-            e.consume();  // ← Ignora el evento de teclado
+            e.consume();  // ← Ignore the keyboard event
             return;
         }
 
@@ -161,8 +199,10 @@ public class SudokuController implements ISudokuController {
     }
 
     /**
-     * Method Updates all interface cells with the current model values.
-     * Applies visual styles based on each cell's state (fixed, conflict, help).
+     * Synchronizes all visual cells with the current model values.
+     *
+     * <p>Updates text, styles, and editing properties based on whether each cell is fixed,
+     * conflicting, or marked as helpful.
      */
     @Override
     public void updateAllCellsFromModel() {
@@ -175,8 +215,8 @@ public class SudokuController implements ISudokuController {
 
                 if (model.isFixed(r, c)) {
                     cell.getStyleClass().add("fixed-cell");
-                    cell.setEditable(false);  // ← NO editable
-                    cell.setFocusTraversable(false); // ← No puede recibir foco
+                    cell.setEditable(false);  // ← NOT editable
+                    cell.setFocusTraversable(false); // ← Cannot receive focus
                 } else {
                     cell.setEditable(true);
                     cell.setFocusTraversable(true);
@@ -186,33 +226,37 @@ public class SudokuController implements ISudokuController {
     }
 
 
-    /** Method performs full validation of the dashboard, flagging cells with conflicts.
-     * Also updates the help system counters.
+    /**
+     * Performs full board validation, flags conflicts, and updates the status.
+     *
+     * <p>If the board is complete and conflict-free, displays the congratulations screen.
      */
     @Override
     public void performValidation() {
-        // Limpiar estilos de conflicto
+        // Clear conflicting styles
         for (int r = 0; r < ISudokuModel.SIZE; r++)
             for (int c = 0; c < ISudokuModel.SIZE; c++)
                 cells[r][c].getStyleClass().remove("conflict-cell");
 
-        // Encontrar conflictos
+        // Find conflicts
         List<int[]> conflicts = model.findAllConflicts();
         for (int[] rc : conflicts)
             cells[rc[0]][rc[1]].getStyleClass().add("conflict-cell");
 
-        // Actualizar label de estado
+        // Update status label
         updateStatusLabel();
 
-        // Verificar si el juego está completo (sin celdas vacías y sin conflictos)
+        // Check if the game is complete (no empty cells and no conflicts)
         if (isBoardComplete() && conflicts.isEmpty()) {
             showCongratulations();
         }
     }
 
     /**
-     * Method that provides help to the player by suggesting a valid number for an empty cell.
-     * It has no help limits and continues the game cycle.
+     * Provides a hint (help) by placing a valid number in the first empty cell.
+     *
+     * <p>Selects the first available candidate and applies it; flags conflicts if there are no
+     * valid candidates.
      */
     @Override
     public void onHelp() {
@@ -237,41 +281,62 @@ public class SudokuController implements ISudokuController {
         performValidation();
     }
 
-    // METODO PRIVADO AUXILIAR CORREGIDO
+    /**
+     * Updates the status label based on current conflicts and player name.
+     */
     private void updateStatusLabel() {
         List<int[]> conflicts = model.findAllConflicts();
         String statusMessage = conflicts.isEmpty() ? "✅ All good!" : "⚠️ Conflicts found!";
         statusLabel.setText(getPlayerGreeting() + statusMessage);
     }
 
-    // METODO PRIVADO AUXILIAR PARA MENSAJES ESPECÍFICOS
+    /**
+     * Displays a specific message in the status tag, preserving the player's greeting.
+     *
+     * @param message : Text of the message to display
+     */
     private void updateStatusLabelWithMessage(String message) {
         statusLabel.setText(getPlayerGreeting() + message);
     }
 
-    // METODO PRIVADO AUXILIAR
+
+    /**
+     * Constructs the greeting prefix for the status tag based on the player's name.
+     *
+     * @return prefix with the player's name or an empty string if there is no name
+     */
     private String getPlayerGreeting() {
         return (playerName != null && !playerName.isEmpty()) ? "Player: " + playerName + " | " : "";
     }
 
-    // Función para validar si el tablero completo está correcto
+
+    /**
+     * Checks if the board is complete (no zeros) and no conflicts are detected.
+     *
+     * @return {@code true} if the board is complete and valid; {@code false} otherwise.
+     */
     private boolean isBoardComplete() {
         for (int r = 0; r < ISudokuModel.SIZE; r++) {
             for (int c = 0; c < ISudokuModel.SIZE; c++) {
-                // Si hay alguna celda vacía (0) o con conflicto, no está completo
+                // If there is any empty (0) or conflicting cell, it is not complete
                 if (model.get(r, c) == 0) {
                     return false;
                 }
             }
         }
 
-        // Además de no tener celdas vacías, debe no tener conflictos
+        // In addition to not having empty cells, it must not have conflicts
         List<int[]> conflicts = model.findAllConflicts();
         return conflicts.isEmpty();
     }
 
+    /**
+     * Displays the congratulations window when the user successfully completes the puzzle.
+     *
+     * <p>Applies visual completion styles, displays an {@link Alert}, and restarts the game upon acceptance.
+     */
     private void showCongratulations() {
-        // Aplicar estilo de completado a todas las celdas
+        // Apply completion style to all cells
         for (int r = 0; r < ISudokuModel.SIZE; r++) {
             for (int c = 0; c < ISudokuModel.SIZE; c++) {
                 cells[r][c].getStyleClass().add("completed-cell");
@@ -287,7 +352,7 @@ public class SudokuController implements ISudokuController {
         alert.getButtonTypes().setAll(okButton);
 
         alert.showAndWait().ifPresent(response -> {
-            // Remover estilo de completado al reiniciar
+            // Remove completion style on restart
             for (int r = 0; r < ISudokuModel.SIZE; r++) {
                 for (int c = 0; c < ISudokuModel.SIZE; c++) {
                     cells[r][c].getStyleClass().remove("completed-cell");
@@ -297,6 +362,11 @@ public class SudokuController implements ISudokuController {
         });
     }
 
+    /**
+     * Generates the congratulatory message, including the player's name if available.
+     *
+     * @return congratulatory message to display in the dialog
+     */
     private String getCongratulationsMessage() {
         String playerText = (playerName != null && !playerName.isEmpty()) ?
                 "¡Felicidades " + playerName + "! " : "¡Felicidades! ";
@@ -305,6 +375,11 @@ public class SudokuController implements ISudokuController {
                 "¡Eres un verdadero maestro del Sudoku!";
     }
 
+    /**
+     * Resets the game to its initial state using the predefined starter configuration.
+     *
+     * <p>Reloads the puzzle, updates all cells, and resets the status label.
+     */
     private void resetGame() {
         model.loadPuzzle(starter);
         updateAllCellsFromModel();
